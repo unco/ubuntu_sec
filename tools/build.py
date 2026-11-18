@@ -26,6 +26,22 @@ html = re.sub(r'<link[^>]*cookie-policy\.css[^>]*>', "", html)
 # Hints for services we no longer load.
 html = re.sub(r'<link rel="(?:preconnect|manifest|describedby|alternate)"[^>]*>\s*', "", html)
 
+# Fonts: the inline @font-face rules use root-relative ubuntu.com paths and the
+# preload points cross-origin (blocked by CORS off ubuntu.com). Use repo copies.
+fonts = {
+    "ubuntu-variable-latin.woff2": "ubuntu-latin.woff2",
+    "ubuntu-variable-latin-italic.woff2": "ubuntu-italic-latin.woff2",
+    "ubuntu-mono-variable.woff2": "ubuntu-mono-latin.woff2",
+}
+for name, local in fonts.items():
+    html = re.sub(
+        r'(?:https://ubuntu\.com)?/static/fonts/' + re.escape(name) + r'(?:\?v=\w+)?',
+        "assets/fonts/" + local,
+        html,
+    )
+if "/static/fonts/" in html:
+    print("warning: unresolved /static/fonts/ refs remain")
+
 # Local asset paths.
 assets = {
     "styles.css": "assets/css/styles.css",
