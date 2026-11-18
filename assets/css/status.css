@@ -1,0 +1,151 @@
+/* Status section, based on CVE-2026-98432-status-proposal.html.
+   Scoped to .cve-status so it sits on top of the Vanilla styles in styles.css. */
+.cve-status {
+  --ink: #000;
+  --muted: #666;
+  --line: #d9d9d9;
+  --panel: #fff;
+  --amber: #F99B11;
+  --amber-bg: #FEF5E7;
+  --blue: #0066cc;
+  --code-bg: #1f1f1f;
+  margin-bottom: 2rem;
+}
+.cve-status p { max-width: none; }
+
+/* Summary chips */
+.cve-status .summary { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin: 0 0 1rem; }
+.cve-status .sumlabel { margin-right: .25rem; }
+.cve-status .chip {
+  display: inline-flex; align-items: center; gap: .4rem; margin: 0;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 2px;
+  padding: .25rem .6rem; font: inherit; font-size: .9rem; line-height: 1.5; color: var(--ink);
+}
+.cve-status button.chip { cursor: pointer; }
+.cve-status button.chip:hover { border-color: #999; background: var(--panel); }
+.cve-status .chip .ic { margin: 0; }
+
+/* Scanner data */
+.cve-status .scanner {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; font-size: .92rem;
+  background: var(--panel); border: 1px solid var(--line); padding: .6rem 1rem; margin-bottom: 1.25rem;
+}
+.cve-status .scanner strong { font-weight: 550; }
+.cve-status .tag { font-size: .75rem; padding: .05rem .4rem; border-radius: 2px; background: #eee; color: #333; }
+
+/* Filters */
+.cve-status .filters {
+  display: flex; flex-wrap: wrap; gap: .5rem .9rem; align-items: center;
+  background: var(--panel); border: 1px solid var(--line); padding: .6rem 1rem; font-size: .92rem;
+  scroll-margin-top: 4rem;
+}
+.cve-status .filters input[type=search],
+.cve-status .filters select {
+  width: auto; min-width: 0; margin: 0; height: auto; min-height: 0;
+  font: inherit; padding: .3rem .5rem; border: 1px solid #bbb; border-radius: 2px;
+  background-color: #fff; box-shadow: none; line-height: 1.5;
+}
+.cve-status .filters select { padding-right: 2rem; }
+.cve-status .filters input[type=search] { flex: 1 1 200px; }
+.cve-status .filters label { display: inline-flex; gap: .35rem; align-items: center; white-space: nowrap; margin: 0; padding: 0; }
+.cve-status .filters input[type=checkbox] {
+  position: static; opacity: 1; appearance: auto; -webkit-appearance: checkbox;
+  width: 1rem; height: 1rem; margin: 0;
+}
+.cve-status .count { color: var(--muted); font-size: .88rem; margin: .5rem 0 0; padding: 0; }
+
+/* Status table */
+.cve-status .tablewrap { width: 100%; overflow: visible; }
+.cve-status table.status { width: 100%; border-collapse: collapse; table-layout: fixed; margin: 0; }
+.cve-status .status col.c-pkg { width: 22%; }
+.cve-status .status col.c-rel { width: 20%; }
+.cve-status .status col.c-st { width: 58%; }
+.cve-status .status th {
+  text-align: left; font-weight: 550; font-size: .85rem; text-transform: uppercase; letter-spacing: .02em;
+  padding: .6rem 1rem; border-bottom: 1px solid var(--line); border-top: 0;
+}
+.cve-status .status td {
+  vertical-align: top; padding: .9rem 1rem; border-top: 0; border-bottom: 1px solid var(--line);
+  min-width: 0; overflow-wrap: anywhere;
+}
+.cve-status .status tr.first td { border-top: 2px solid #c4c4c4; }
+.cve-status .status tbody tr.first:first-child td { border-top: 0; }
+.cve-status .status td.pkg { font-size: 1.1rem; border-bottom-color: transparent; }
+.cve-status .status tr.last td.pkg { border-bottom-color: var(--line); }
+.cve-status .status td.rel { font-size: 1.1rem; overflow-wrap: normal; }
+.cve-status .status tr.quiet td.rel,
+.cve-status .muted { color: #888; }
+.cve-status td.empty { color: var(--muted); padding: 1.5rem 1rem; }
+.cve-status .rel .code { color: var(--muted); display: block; }
+
+.cve-status .st { display: grid; grid-template-columns: 22px minmax(0, 1fr); column-gap: .6rem; align-items: start; }
+.cve-status .st .head { font-size: 1.1rem; }
+.cve-status .st .head .ver { color: var(--muted); }
+.cve-status .st .sub { grid-column: 2; color: var(--muted); font-size: .9rem; margin-top: .1rem; }
+.cve-status .ic { width: 20px; height: 20px; margin-top: 4px; }
+
+.cve-status tr.candidate td.rel,
+.cve-status tr.candidate td.stc,
+.cve-status tr.howto-row td.howto-cell { background: var(--amber-bg); }
+.cve-status tr.candidate.open td.rel,
+.cve-status tr.candidate.open td.stc { border-bottom-color: transparent; }
+.cve-status .pocket {
+  font-family: "Ubuntu Mono variable", "Ubuntu Mono", monospace; background: #eee;
+  padding: 0 .3rem; border-radius: 2px; color: #333; white-space: nowrap;
+}
+
+/* Install-the-candidate disclosure */
+.cve-status .toggle {
+  grid-column: 2; justify-self: start; margin: .5rem 0 0; padding: 0;
+  background: none; border: 0; color: var(--blue); font: inherit; font-size: .95rem;
+  line-height: 1.5; cursor: pointer; text-align: left;
+}
+.cve-status .toggle:hover { background: none; text-decoration: underline; }
+.cve-status .toggle::before { content: "\25B8  "; }
+.cve-status .toggle[aria-expanded="true"]::before { content: "\25BE  "; }
+.cve-status tr.howto-row[hidden] { display: none; }
+.cve-status td.howto-cell { padding: 0 1rem 1rem; }
+.cve-status .howto-body { background: var(--panel); border: 1px solid var(--line); padding: .8rem 1rem; font-size: .92rem; min-width: 0; }
+.cve-status .howto-body p { margin: 0 0 .5rem; padding: 0; }
+.cve-status .warn { border-left: 3px solid var(--amber); padding-left: .6rem !important; margin: 0 0 .7rem; }
+.cve-status pre {
+  background: var(--code-bg); color: #f3f3f3; padding: .8rem 1rem; overflow-x: auto;
+  font-family: "Ubuntu Mono variable", "Ubuntu Mono", monospace; font-size: .85rem;
+  margin: .5rem 0; border-radius: 2px; max-width: 100%; overflow-wrap: normal; white-space: pre;
+}
+.cve-status pre .c { color: #9a9a9a; }
+.cve-status .ph { background: #5a3d00; color: #ffd38a; padding: 0 .25rem; border-radius: 2px; }
+.cve-status ol.steps { padding-left: 1.2rem; margin: .4rem 0; }
+.cve-status ol.steps li { padding: 0; margin: 0 0 .2rem; }
+.cve-status code { overflow-wrap: anywhere; }
+
+.cve-status .more { margin-top: 1rem; }
+.cve-status .more[hidden] { display: none; }
+.cve-status .more button {
+  margin: 0; background: var(--panel); border: 1px solid var(--line); padding: .45rem .9rem;
+  font: inherit; color: var(--ink); cursor: pointer; border-radius: 2px;
+}
+
+/* Key */
+.cve-status .key {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: .75rem 1.5rem;
+  margin-top: 1.5rem; background: var(--panel); border: 1px solid var(--line); padding: 1rem; font-size: .9rem;
+}
+.cve-status .key .st { align-content: start; }
+.cve-status .key .st .head { font-size: .95rem; }
+
+@media (max-width: 640px) {
+  .cve-status table.status, .cve-status .status thead, .cve-status .status tbody { display: block; width: 100%; }
+  .cve-status .status colgroup { display: none; }
+  .cve-status .status tr { display: grid; grid-template-columns: 34% minmax(0, 1fr); }
+  .cve-status .status tr.howto-row { grid-template-columns: minmax(0, 1fr); }
+  .cve-status .status tr.howto-row[hidden] { display: none; }
+  .cve-status .status th, .cve-status .status td { display: block; min-width: 0; }
+  .cve-status .status th.pkg, .cve-status .status td.pkg:empty { display: none; }
+  .cve-status .status td.pkg { grid-column: 1 / -1; padding-bottom: 0; }
+  .cve-status .status tr.first td.rel, .cve-status .status tr.first td.stc { border-top: 0; }
+  .cve-status .filters { padding: .6rem .75rem; }
+  .cve-status .status td { padding: .75rem .5rem; }
+  .cve-status .status td.rel, .cve-status .st .head { font-size: 1rem; }
+  .cve-status td.howto-cell { padding: 0 .5rem .75rem; }
+}
