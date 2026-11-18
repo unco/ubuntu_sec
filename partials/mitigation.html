@@ -1,6 +1,80 @@
-<p>Until a fixed kernel is installed, drop incoming IPv4 TCP packets that carry IPv4 header options (IP header length over 20 bytes) with a host firewall rule. Normal TCP options, UDP and IPv6 keep working. Containers and guests in their own network namespace need the rule applied inside each namespace, and the rule reduces risk without replacing the kernel update.</p>
-            <div class="p-notification--information">
-              <div class="p-notification__content">
-                <p class="p-notification__message">Instructions for UFW, iptables and nftables, including how to persist and revert the rule, are in the full mitigation guide.</p>
-              </div>
+<div class="cve-mitigation">
+              <p>Drop incoming IPv4 TCP packets with IPv4 header options (IP header length &gt; 20 bytes) using your host firewall until a fixed kernel is installed.</p>
+              <p>Normal IPv4 TCP traffic, standard TCP options (timestamps, window scaling, SACK), UDP, and IPv6 keep working; only TCP connections that use IPv4 header options will fail.</p>
+              <ul>
+                <li>Covers traffic to the host itself (including loopback), but containers or guests with separate network namespaces need the rule applied inside each namespace.</li>
+                <li>Blocks remote network attempts, but local processes can still set IPv4 socket options, so this reduces risk rather than replacing the kernel update.</li>
+              </ul>
+
+              <details class="mitigation-guide">
+                <summary>Show how to apply and revert the mitigation</summary>
+
+                <div class="mitigation-body">
+                  <h3>Apply the mitigation</h3>
+                  <p class="u-text--muted">Use only the section that matches your firewall.</p>
+
+                  <h4>UFW</h4>
+                  <p class="when">Use when <code>sudo ufw status</code> shows <code>Status: active</code>.</p>
+                  <ol>
+                    <li>In <code>/etc/ufw/before.rules</code>, add this line right after <code># End required lines</code> (above the loopback and RELATED,ESTABLISHED rules):
+<pre>-A ufw-before-input -p tcp -m u32 --u32 "0&gt;&gt;24&amp;0x0f=6:15" -j DROP</pre></li>
+                    <li>Reload UFW. This also persists across reboots.
+<pre>sudo ufw reload</pre></li>
+                  </ol>
+
+                  <h4>iptables</h4>
+                  <p class="when">Use when UFW is inactive and nftables is not managing rules (including Ubuntu 16.04, 18.04 and Ubuntu Core).</p>
+                  <ol>
+                    <li>Apply the rule immediately at the top of INPUT:
+<pre>sudo iptables -I INPUT 1 -p tcp -m u32 --u32 "0&gt;&gt;24&amp;0x0f=6:15" -j DROP</pre></li>
+                    <li>Persist it across reboots:
+                      <ul>
+                        <li><strong>Classic Ubuntu:</strong> save with iptables-persistent, or add the command to your firewall script. Installing iptables-persistent removes the ufw package.
+<pre>sudo apt-get install iptables-persistent
+sudo netfilter-persistent save</pre></li>
+                        <li><strong>Ubuntu Core:</strong> run the command at startup from a snap daemon with the <code>firewall-control</code> interface connected, or per device with a oneshot unit in <code>/etc/systemd/system</code>.</li>
+                      </ul>
+                    </li>
+                  </ol>
+
+                  <h4>nftables</h4>
+                  <p class="when">Use when <code>/etc/nftables.conf</code> manages the firewall (without UFW).</p>
+                  <ol>
+                    <li>Create and load the rule now:
+<pre>printf '%s\n' 'table inet cve_2026_98432 {
+  chain input {
+    type filter hook input priority -310; policy accept;
+    ip protocol tcp ip hdrlength &gt; 5 counter drop
+  }
+}' | sudo tee /etc/cve-2026-98432.nft &gt;/dev/null
+
+sudo nft -c -f /etc/cve-2026-98432.nft &amp;&amp; \
+  sudo nft -f /etc/cve-2026-98432.nft</pre></li>
+                    <li>Persist it across reboots. Do not enable <code>nftables.service</code> if UFW is active, because the default <code>/etc/nftables.conf</code> flushes existing rules.
+<pre>echo 'include "/etc/cve-2026-98432.nft"' | sudo tee -a /etc/nftables.conf
+
+sudo nft -c -f /etc/nftables.conf &amp;&amp; \
+  sudo systemctl enable nftables.service</pre></li>
+                  </ol>
+
+                  <h3>Revert the mitigation</h3>
+                  <p class="u-text--muted">After booting into a fixed kernel.</p>
+
+                  <h4>UFW</h4>
+                  <p>Delete the <code>-A ufw-before-input ... 0&gt;&gt;24&amp;0x0f=6:15 -j DROP</code> line from <code>/etc/ufw/before.rules</code>, then reload:</p>
+<pre>sudo ufw reload</pre>
+
+                  <h4>iptables</h4>
+                  <p>Remove the live rule, and any startup hook or snap rule you added:</p>
+<pre>sudo iptables -D INPUT -p tcp -m u32 --u32 "0&gt;&gt;24&amp;0x0f=6:15" -j DROP</pre>
+                  <p>If you saved it with iptables-persistent, update the saved rules:</p>
+<pre>sudo netfilter-persistent save</pre>
+
+                  <h4>nftables</h4>
+                  <p>Remove the boot include, the rule file and the live table:</p>
+<pre>sudo sed -i '\|^include "/etc/cve-2026-98432.nft"$|d' /etc/nftables.conf
+sudo rm -f /etc/cve-2026-98432.nft
+sudo nft delete table inet cve_2026_98432</pre>
+                </div>
+              </details>
             </div>

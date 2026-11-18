@@ -1,0 +1,32 @@
+/* Mitigation section: intro text plus an expandable how-to. */
+.cve-mitigation ul { margin-bottom: 1.5rem; }
+.cve-mitigation code { overflow-wrap: anywhere; }
+
+.cve-mitigation .mitigation-guide { margin: 0 0 1.5rem; }
+.cve-mitigation .mitigation-guide > summary {
+  display: inline-block; cursor: pointer; list-style: none;
+  color: #0066cc; padding: 0; margin: 0;
+}
+.cve-mitigation .mitigation-guide > summary::-webkit-details-marker { display: none; }
+.cve-mitigation .mitigation-guide > summary::before { content: "\25B8\00a0\00a0"; }
+.cve-mitigation .mitigation-guide[open] > summary::before { content: "\25BE\00a0\00a0"; }
+.cve-mitigation .mitigation-guide > summary:hover { text-decoration: underline; }
+
+.cve-mitigation .mitigation-body {
+  margin-top: 1rem; padding: 1.25rem 1.5rem .5rem;
+  background: #fff; border: 1px solid #d9d9d9;
+}
+.cve-mitigation .mitigation-body h3 { margin: 0 0 .25rem; padding: 0; }
+.cve-mitigation .mitigation-body h3:not(:first-child) { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #d9d9d9; }
+.cve-mitigation .mitigation-body h4 { margin: 1.5rem 0 .25rem; padding: 0; font-size: 1rem; line-height: 1.5rem; font-weight: 550; }
+.cve-mitigation .mitigation-body p.when { color: #666; }
+.cve-mitigation .mitigation-body ol,
+.cve-mitigation .mitigation-body ul { margin-left: 1.25rem; margin-bottom: 1rem; }
+.cve-mitigation .mitigation-body li { padding-bottom: .25rem; }
+
+.cve-mitigation pre {
+  background: #1f1f1f; color: #f3f3f3; border-radius: 2px;
+  padding: .75rem 1rem; margin: .5rem 0 1rem; overflow-x: auto;
+  font-family: "Ubuntu Mono variable", "Ubuntu Mono", monospace; font-size: .9rem; line-height: 1.5;
+  white-space: pre; overflow-wrap: normal; max-width: 100%;
+}

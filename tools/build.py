@@ -80,6 +80,7 @@ html = html[:start] + (ROOT / "partials" / "status.html").read_text(encoding="ut
 html = html.replace(
     '<link rel="stylesheet" type="text/css" media="print"',
     '<link rel="stylesheet" type="text/css" media="screen" href="assets/css/status.css">\n'
+    '    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/mitigation.css">\n'
     '    <link rel="stylesheet" type="text/css" media="print"',
     1,
 )
