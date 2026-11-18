@@ -58,6 +58,18 @@ leftover = re.findall(files_dir + r"[^\"')\s]*", html)
 if leftover:
     print("warning: unresolved saved-page refs:", sorted(set(leftover)))
 
+def swap_after_heading(html, heading_id, partial):
+    """Replace the first <p>...</p> after the given section heading with a partial."""
+    h = html.index(f'id="{heading_id}"')
+    start = html.index("<p", h)
+    end = html.index("</p>", start) + len("</p>")
+    return html[:start] + (ROOT / "partials" / partial).read_text(encoding="utf-8").strip() + html[end:]
+
+
+# Rewritten Description and Mitigation text from the status proposal.
+html = swap_after_heading(html, "description", "description.html")
+html = swap_after_heading(html, "mitigation", "mitigation.html")
+
 # Swap the Status section for the redesigned one in partials/status.html.
 # Replaces from the Status heading row to the end of the original status table.
 status_h2 = html.index('id="status"')

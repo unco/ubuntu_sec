@@ -1,0 +1,6 @@
+<p>Until a fixed kernel is installed, drop incoming IPv4 TCP packets that carry IPv4 header options (IP header length over 20 bytes) with a host firewall rule. Normal TCP options, UDP and IPv6 keep working. Containers and guests in their own network namespace need the rule applied inside each namespace, and the rule reduces risk without replacing the kernel update.</p>
+            <div class="p-notification--information">
+              <div class="p-notification__content">
+                <p class="p-notification__message">Instructions for UFW, iptables and nftables, including how to persist and revert the rule, are in the full mitigation guide.</p>
+              </div>
+            </div>
