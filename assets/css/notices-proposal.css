@@ -1,0 +1,47 @@
+/* Proposed additions to the Security Notices list and notice pages. */
+.pocket {
+  font-family: "Ubuntu Mono variable", "Ubuntu Mono", monospace; background: #eee;
+  padding: 0 .3rem; border-radius: 2px; color: #333; white-space: nowrap;
+}
+.ic { width: 20px; height: 20px; flex-shrink: 0; }
+
+/* Notices list */
+.candidate-alert { margin-bottom: 1.5rem; }
+.notices-tabs { margin-bottom: 1.5rem; }
+.notices-tabs .p-tabs__link .u-text--muted { margin-left: .25rem; }
+#candidates-panel[hidden], #released-panel[hidden] { display: none; }
+.candidates-intro { max-width: 40em; }
+.candidate-counts { display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; }
+.candidate-counts span { display: inline-flex; align-items: center; gap: .4rem; }
+.candidate-counts .ic { width: 18px; height: 18px; }
+
+/* Notice page: fixes still in testing */
+.usn-proposal .st { display: flex; gap: .6rem; align-items: flex-start; }
+.usn-proposal .st .ic { margin-top: 3px; }
+.usn-proposal .sub { color: #666; font-size: .875rem; }
+.usn-proposal table.still-testing { margin-bottom: 1rem; }
+.usn-proposal table.still-testing tbody tr:not(.is-this) td,
+.usn-proposal table.still-testing tbody tr:not(.is-this) th { background: #FEF5E7; }
+
+/* Notice page: timeline */
+.fix-timeline { list-style: none; margin: 0 0 1rem; padding: 0; }
+.fix-timeline li {
+  position: relative; display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 1rem;
+  padding: 0 0 1.25rem 1.75rem; margin: 0;
+}
+.fix-timeline li::before {
+  content: ""; position: absolute; left: 0; top: .35rem; width: .9rem; height: .9rem;
+  border-radius: 50%; background: #fff; border: 2px solid #999;
+}
+.fix-timeline li::after {
+  content: ""; position: absolute; left: calc(.45rem - 1px); top: 1.4rem; bottom: .1rem;
+  width: 2px; background: #d9d9d9;
+}
+.fix-timeline li:last-child::after { display: none; }
+.fix-timeline li.is-candidate::before { background: #F99B11; border-color: #F99B11; }
+.fix-timeline li.is-released::before { background: #0E8420; border-color: #0E8420; }
+.fix-timeline .when { color: #666; }
+
+@media (max-width: 620px) {
+  .fix-timeline li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}

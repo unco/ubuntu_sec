@@ -5,6 +5,7 @@ var PKGS=[{"p":"linux","r":[["F","7.3.0-10.10"],["F","7.0.0-43.43"],["F","6.8.0-
 // Illustrative: jammy shown as fixed in -security only (proposal item 4)
 PKGS[0].r[3][0]="P";
 
+var USNS={"linux-fips/jammy":"USN-9027-2"};
 var state={expanded:false};
 var $=function(id){return document.getElementById(id);};
 var ico=function(n){return '<svg class="ic"><use href="#i-'+n+'"/></svg>';};
@@ -33,12 +34,16 @@ function howto(p,code,v){
 }
 function cell(p,code,st){
   var s=st[0], v=st[1];
-  if(s==="F") return '<div class="st">'+ico("fixed")+'<div class="head">Fixed <span class="ver">in '+esc(v)+'</span></div></div>';
+  if(s==="F"){
+    var usn=USNS[p+"/"+code];
+    return '<div class="st">'+ico("fixed")+'<div class="head">Fixed <span class="ver">in '+esc(v)+'</span></div>'+
+      (usn?'<div class="sub"><a href="'+usn+'.html">'+usn+'</a></div>':'')+'</div>';
+  }
   if(s==="P") return '<div class="st">'+ico("pocket")+'<div class="head">Fixed <span class="ver">in '+esc(v)+'</span></div><div class="sub">Available now in <span class="pocket">-security</span>. Reaching <span class="pocket">-updates</span> soon. Default unattended-upgrades already installs it.</div></div>';
   if(s==="C"){
     var edge=EDGE[code], id="howto-"+p+"-"+code;
     return '<div class="st">'+ico("cand")+'<div class="head">Candidate fix available <span class="ver">'+esc(v)+'</span></div>'+
-      '<div class="sub">'+(edge?'Testing in the Ubuntu Pro Edge archive.':'Testing in <span class="pocket">-proposed</span>.')+' The released kernel is still vulnerable.</div>'+
+      '<div class="sub">'+(edge?'Testing in the Ubuntu Pro Edge archive.':'Testing in <span class="pocket">-proposed</span>.')+' The released kernel is still vulnerable. A notice will follow on release.</div>'+
       '<button type="button" class="toggle" aria-expanded="false" aria-controls="'+id+'">Install the candidate fix from '+(edge?'Edge (Ubuntu Pro)':'-proposed')+'</button></div>';
   }
   if(s==="V") return '<div class="st">'+ico("vuln")+'<div class="head">Vulnerable</div><div class="sub">No fix available yet.</div></div>';
@@ -110,5 +115,16 @@ $("rows").addEventListener("click",function(e){
   document.getElementById(b.getAttribute("aria-controls")).hidden=!open;
   b.closest("tr").classList.toggle("open",open);
 });
+(function(){
+  var q=new URLSearchParams(location.search);
+  if(q.has("q")) $("f-q").value=q.get("q");
+  if(q.has("rel")) $("f-rel").value=q.get("rel");
+  if(q.has("st")) $("f-st").value=q.get("st");
+  if(q.get("ign")==="1") $("f-ign").checked=true;
+  if(q.get("x")==="1") $("f-x").checked=true;
+})();
 summary(); render();
+if(location.search && location.hash==="#status"){
+  requestAnimationFrame(function(){ var h=document.getElementById("status"); if(h) h.scrollIntoView(); });
+}
 })();

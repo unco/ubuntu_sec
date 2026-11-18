@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ubuntu candidate security fixes (prototype)</title>
+    <link>https://unco.github.io/ubuntu_sec/notices.html#candidates</link>
+    <atom:link href="https://unco.github.io/ubuntu_sec/candidates.xml" rel="self" type="application/rss+xml"/>
+    <description>Design prototype, not live security data. Security fixes that are testing in -proposed or the Ubuntu Pro Edge archive, before a security notice is issued.</description>
+    <language>en</language>
+    <lastBuildDate>Tue, 17 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <item>
+      <title>CVE-2026-98432: Linux kernel candidate fixes</title>
+      <link>https://unco.github.io/ubuntu_sec/index.html?st=C#status</link>
+      <guid isPermaLink="false">candidate-CVE-2026-98432</guid>
+      <pubDate>Tue, 27 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Fixes for a critical use-after-free in IPv4 TCP connection handling are testing for 27 kernel packages (41 candidate fixes) on Ubuntu 24.04, 22.04, 20.04, 18.04, 16.04 and 14.04 LTS. Released kernels are still vulnerable until a notice is issued.</description>
+    </item>
+  </channel>
+</rss>
